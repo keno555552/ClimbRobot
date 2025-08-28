@@ -366,8 +366,6 @@ void GameScene::Update() {
 
 	for (int i = 0; i < 3; i++) {
 
-		
-
 		heartWorldTransform_[i].Initialize();
 		heartWorldTransform_[i].translation_ = cameraController_->GetCamera().translation_;
 		heartWorldTransform_[i].translation_.x += -19.0f + i * 2.5f;

@@ -9,24 +9,24 @@ using namespace KamataEngine;
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 #pragma region System初期化
 	/// KamataEngineの初期化
-	Initialize(L"LE2B_06_カン_ケンリャン_AL3");
+	Initialize(L"LE2B_06_カン_ケンリャン_ClimbRobot");
 	/// ImGuiの初期化
 	ImGuiManager* imguiManager = ImGuiManager::GetInstance();
 	/// DirectXの初期化
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
-	//Scene scene = Scene::kTitle;
-	Scene scene = Scene::kGame;
+	Scene scene = Scene::kTitle;
+	//Scene scene = Scene::kGame;
 
 	/// TitleSceneの生成まだわ初期化
-	TitleScene* titleScene = nullptr;
-	//TitleScene* titleScene = new TitleScene;
-	//titleScene->Initialize();
+	//TitleScene* titleScene = nullptr;
+	TitleScene* titleScene = new TitleScene;
+	titleScene->Initialize();
 
 	/// GameSceneの生成,そして待機
-	//GameScene* gameScene = nullptr;
-	GameScene* gameScene = new GameScene;
-	gameScene->Initialize();
+	GameScene* gameScene = nullptr;
+	//GameScene* gameScene = new GameScene;
+	//gameScene->Initialize();
 
 #pragma endregion
 
