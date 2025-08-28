@@ -3,6 +3,7 @@
 using namespace KamataEngine;
 #include "Bullet.h"
 #include "CameraController.h"
+#include "Door.h"
 #include "Effect.h"
 #include "Enemy.h"
 #include "MapChipField.h"
@@ -38,6 +39,7 @@ public:
 	void CreateBullet(float shootAngle);
 	/// 終了フラグのgetter
 	bool IsFinished() const { return finished_; }
+	bool IsWin() const { return isWin_; }
 
 private:
 	void GenerateBlocks();
@@ -72,6 +74,7 @@ private:
 
 	/// 終了フラグ
 	bool finished_ = false;
+	bool isWin_ = false;
 
 private:
 	Fade* fade_ = new Fade();
@@ -97,6 +100,9 @@ private:
 
 	/// マップチップ
 	MapChipField* mapChipField_ = nullptr;
+
+	/// Door
+	Door* door_ = new Door;
 
 	/// ボックス
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;

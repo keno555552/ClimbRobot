@@ -68,6 +68,9 @@ void GameScene::Initialize() {
 	player_->Initialize(&nowCamera, playerPosition);
 	player_->SetGameScene(this);
 
+	Vector3 doorPosition = mapChipField_->GetMapChipPositionByIndex(5, 2);
+	door_->Initialize(&nowCamera, doorPosition);
+
 	/// MouseTracker
 	mouseTracker_->Initialize(&nowCamera, player_);
 
@@ -144,6 +147,8 @@ GameScene::~GameScene() {
 #pragma region GameObject
 	delete player_, player_ = nullptr;
 
+	delete door_, door_ = nullptr;
+
 	if (!enemyGroup_.empty()) {
 		for (auto ptr : enemyGroup_) {
 			delete ptr, ptr = nullptr;
@@ -210,6 +215,8 @@ void GameScene::Update() {
 #pragma endregion
 
 #pragma region GameObject
+
+	door_->Update();
 
 	switch (phase_) {
 	case Phase::kPlay:
@@ -341,6 +348,9 @@ void GameScene::Update() {
 		///////////////////////////////////////////////////////////////////////////////////
 		break;
 	}
+	if (fade_->IsFinished() && isWin_) {
+		finished_ = true;
+	}
 
 #pragma endregion
 
@@ -370,8 +380,7 @@ void GameScene::Update() {
 		heartWorldTransform_[i].translation_ = cameraController_->GetCamera().translation_;
 		heartWorldTransform_[i].translation_.x += -19.0f + i * 2.5f;
 		heartWorldTransform_[i].translation_.y += 10.0f;
-		heartWorldTransform_[i].translation_.z += 30.0f -1.2f;
-
+		heartWorldTransform_[i].translation_.z += 30.0f - 1.2f;
 
 		// アフィン変換
 		Matrix4x4 mS = MakeScaleMatrixM(heartWorldTransform_[i].scale_);
@@ -404,6 +413,8 @@ void GameScene::Render() {
 #pragma region 3Dモデル描画
 	/// 前処理
 	Model::PreDraw(dxCommon->GetCommandList());
+
+	door_->Render();
 
 	/// スカイドームの描画
 	skydome_->Render();
@@ -531,6 +542,25 @@ void GameScene::CheckAllCollisions() {
 
 			if (Length(vecBetween) > 45.0f) {
 				bullet->SetIsDead(true);
+			}
+		}
+	}
+
+	{
+		AABB aabb1, aabb2;
+
+		/// プレイヤーの座標
+		aabb1 = player_->GetAABB();
+		/// 自キャラと敵弾全ての当たり判定
+		
+		/// 門の座標
+		aabb2 = door_->GetAABB();
+
+		if (crashDecision(aabb1, aabb2)) {
+			/// 自キャラの衝突時関数を呼び出す
+			if (fade_->GetStatus() != Fade::Status::FadeOut) {
+				fade_->Start(Fade::Status::FadeOut, 1.0f);
+				isWin_ = true;
 			}
 		}
 	}
